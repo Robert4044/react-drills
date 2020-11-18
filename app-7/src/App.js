@@ -1,26 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import List from './component/List';
+import NewTask from './component/NewTask';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+    constructor() {
+        super();
+
+        this.state = {
+            task: [],
+        };
+        this.handleAddTask = this.handleAddTask.bind(this);
+    }
+    handleAddTask(task) {
+        this.setState({ task: [...this.state.task, task] }); //spread adds an element while preserving existing array
+    }
+
+    render() {
+        return (
+            <div className='App'>
+                <h1>My to-do List:</h1>
+                <NewTask add={this.handleAddTask} />
+                <List tasks={this.state.task} />
+            </div>
+        );
+    }
 }
+// App passes add to NewTask as props
+// App passes tasks to List as props
 
 export default App;
