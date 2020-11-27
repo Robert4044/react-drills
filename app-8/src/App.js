@@ -1,26 +1,66 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import Starwars from './Component/Starwars';
+import axios from 'axios';
 
+class App extends Component {
+    constructor() {
+        super();
+        this.state = {
+            singleStarwars: {},
+            starwarsId: 1,
+        };
+
+        this.getSingleStarwars = this.getSingleStarwars.bind(this);
+        this.handleStarwarsIdChange = this.handleStarwarsIdChange.bind(this);
+    }
+
+    getSingleStarwars(e) {
+        e.preventDefault();
+
+        axios
+            .get(`https://swapi.dev/api/people/${this.state.starwarsId}`)
+            .then(res => {
+                console.log(res.data);
+                this.setState({
+                    singleStarwars: res.data,
+                });
+            })
+            .catch(e => {
+                alert('Starwars Character does not exist!');
+            });
+    }
+
+    handleStarwarsIdChange(e) {
+        this.setState({
+            starwarsId: e.target.value,
+        });
+    }
+
+    render() {
+        return (
+            <div>
+                <header>
+                    <form onSubmit={this.getSingleStarwars}>
+                        <h2 className='header-text'>
+                            Find a specific Starwars Character
+                        </h2>
+                        <div className='input-container'>
+                            <input
+                                onChange={this.handleStarwarsIdChange}
+                                placeholder='Starwars Number'
+                            />
+                            <button className='btn'>Search</button>
+                        </div>
+                    </form>
+                </header>
+
+                <div className='content'>
+                    <Starwars starwars={this.state.singleStarwars} />
+                </div>
+            </div>
+        );
+    }
+}
 export default App;
